@@ -1,0 +1,173 @@
+PROJECT: Operation Black Friday (Legacy Monolith to EKS Migration)
+
+COMPANY BACKGROUND:
+StyleVibe Inc.
+Mid-sized fashion e-commerce retailer.
+
+    Scale: 500K Monthly Active Users (MAU).
+
+    Revenue: ~$50M/year.
+
+    Stage: Profitable but technically stagnant.
+
+    Tech Maturity: Low. We grew too fast and ignored infrastructure.
+
+BUSINESS CONTEXT:
+Black Friday is in 6 weeks. Last year, the site crashed for 4 hours due to traffic spikes, costing us estimated $400k in lost sales. The CEO is furious.
+Furthermore, our AWS bill is bloating ($8k/mo) because we are running oversized instances to compensate for poor optimization. We need to modernize to survive the traffic spike and cut costs.
+
+STAKEHOLDERS:
+
+    Executive Sponsor: Marcus (CTO) - Cares about: Uptime (Job on the line) and Speed.
+
+    Product Manager: Sarah - Needs: Zero downtime deployments (She hates the current "maintenance windows").
+
+    Dev Team Lead: Jason - 3 backend devs (PHP), 1 frontend. Pain points: "I spend 50% of my time fixing server config drift."
+
+    Security Officer: Priya - Requirements: PCI-DSS Level 2. We handle payment tokens; the current setup is a compliance nightmare.
+
+    Finance: David - Budget: Cut spend to $5.5k/month. Stop paying for idle compute.
+
+PROJECT OBJECTIVES:
+
+    Primary Goal: Migrate the PHP Monolith to AWS EKS with auto-scaling to handle 10x traffic spikes.
+
+    Secondary Goal: Implement Blue/Green deployment to reduce deployment risk and downtime to near-zero.
+
+    Tertiary Goal: Reduce infrastructure costs by ~30% via rightsizing and Spot Instances (where safe).
+
+CURRENT STATE (THE MESS YOU'RE INHERITING):
+Infrastructure:
+
+    Provider: AWS (US-East-1 only).
+
+    Compute: 4x m5.2xlarge EC2 instances (Manual setup, "Pet" servers).
+
+    Database: Self-hosted MySQL 5.7 on a single EC2 instance (No automated backups, manual dumps).
+
+    Storage: User uploads (product images) are stored on the local EBS volume of the web servers (Yes, really. We use rsync to sync them between servers. It breaks often).
+
+    Networking: Everything is in the Default VPC. Public subnets only.
+
+DevOps (or lack thereof):
+
+    Deployment: Jenkins server running a shell script that SSHs into servers and runs git pull.
+
+    Config: Secrets (DB passwords, API keys) are hardcoded in config.php committed to Git.
+
+    Monitoring: AWS CloudWatch CPU metrics only. No application logs aggregation.
+
+DESIRED END STATE:
+Infrastructure:
+
+    Compute: AWS EKS (Kubernetes) 1.29+. Mixed instance policy (On-demand for base, Spot for spikes).
+
+    Database: Migration to Amazon RDS for MySQL (Multi-AZ).
+
+    Storage: Move local assets to S3 + CloudFront.
+
+    Cache: Implement ElastiCache (Redis) for session handling (currently file-based PHP sessions).
+
+DevOps Maturity:
+
+    IaC: Terraform for everything. No click-ops.
+
+    CI/CD: GitHub Actions. Build Docker image -> Push to ECR -> Deploy to EKS (Helm).
+
+    Observability: Prometheus/Grafana for metrics, CloudWatch Logs for logging.
+
+CONSTRAINTS:
+
+    Timeline: 3 Weeks (Hard stop. We need 3 weeks of freeze/testing before Black Friday).
+
+    Budget: One-time migration cost cap: $1,000. Ongoing: Target <$5.5k/mo.
+
+    Compliance: PCI-DSS. Database must be encrypted at rest. WAF must be enabled.
+
+    Team Skills: Jason (Dev Lead) knows Docker basics but zero Kubernetes. You need to make this easy for him to consume.
+
+DELIVERABLES:
+
+Cloud Infrastructure:
+
+    [ ] Terraform State (S3 backend + DynamoDB locking).
+
+    [ ] VPC Design (Private/Public subnets, NAT Gateways).
+
+    [ ] EKS Cluster (Managed Node Groups, Auto-scaler).
+
+    [ ] RDS MySQL (Migration from EC2 dump).
+
+    [ ] Redis (ElastiCache) for PHP Session storage.
+
+    [ ] S3 Bucket + Policy for static assets.
+
+DevOps Automation:
+
+    [ ] Dockerfile optimization (Multi-stage build for PHP-FPM/Nginx).
+
+    [ ] Helm Chart for the application (Ingress, Service, Deployment, HPA).
+
+    [ ] GitHub Actions Pipeline (Lint -> Build -> Scan -> Deploy to Staging -> Manual Approval -> Deploy to Prod).
+
+    [ ] Secret Management (Move hardcoded secrets to AWS Secrets Manager/Sealed Secrets).
+
+Observability & Security:
+
+    [ ] Ingress Controller (Nginx or ALB) with WAF integration.
+
+    [ ] Prometheus/Grafana stack (Node Exporter, Kube State Metrics).
+
+    [ ] Container Image Scanning (Trivy or ECR scanning).
+
+Documentation:
+
+    [ ] "How to Deploy" guide for the Dev team.
+
+    [ ] Architecture Diagram (Mermaid.js or Draw.io).
+
+    [ ] Cost breakdown analysis.
+
+PHASES/MILESTONES:
+
+Week 1: The Foundation
+
+    [ ] Containerize the PHP application (make it stateless - move sessions to Redis, files to S3).
+
+    [ ] Design and deploy VPC and EKS Cluster via Terraform.
+
+    [ ] Set up the GitHub Actions CI (Build & Push only).
+
+    Checkpoint: Show me a "Hello World" PHP app running on the cluster.
+
+Week 2: The Migration
+
+    [ ] Provision RDS and perform a dry-run data migration (DMS or Dump/Restore).
+
+    [ ] Deploy the full application to a "Staging" namespace.
+
+    [ ] Implement HPA (Horizontal Pod Autoscaling) based on CPU/Memory.
+
+    Checkpoint: Load test the staging environment. I want to see pods scale up when we hit it with Apache Bench.
+
+Week 3: Production & Optimization
+
+    [ ] Final Data Cutover (Maintenance window required).
+
+    [ ] DNS switch (Route53).
+
+    [ ] Implement Spot Instances for cost savings.
+
+    [ ] Disaster Recovery drill (Simulate a region failure or DB crash).
+
+    Checkpoint: Production Go-Live and Team Handoff.
+
+REALISTIC COMPLICATIONS (HINTS/GOTCHAS):
+
+    The "Local File" Problem: The legacy code expects to write images to /var/www/html/uploads. If you just Dockerize it, those images disappear when pods restart. You need to refactor or use a sidecar/CSI driver (better: push back and ask devs to use S3 SDK, but they might refuse due to time. Find a workaround).
+
+    Cron Jobs: The current server runs local cron jobs for email newsletters. In K8s, if you scale to 5 pods, you'll send 5x the emails. You need CronJobs in K8s, not crontab inside the container.
+
+    Database Size: The DB is 200GB. A standard mysqldump might take too long during the cutover window. Investigate faster migration methods.
+
+    Team Pushback: Jason (Dev Lead) will complain that "kubectl is too hard." You might need to set up a GUI (like Lens) or simplify the dashboard for them.
