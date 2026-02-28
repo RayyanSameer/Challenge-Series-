@@ -1,0 +1,22 @@
+The Log Cleaner
+
+Scenario:
+You are managing a legacy application that dumps its logs into a single file located at /tmp/app.log. The disk space on this partition is reaching its limit. Your task is to create a script named clean_logs.sh that performs the following actions:
+
+    Checks if the file /tmp/app.log exists.
+
+    If it exists, it should clear the contents of the file without deleting the file itself (the application process holds a file handle and will crash if the file is removed).
+
+    If the file does not exist, the script should print an error message to standard error (stderr) and exit with a non-zero status code.
+
+    If successful, it should print "Logs cleared." to standard output (stdout).
+
+Requirements:
+
+    Use a proper Shebang.
+
+    Ensure you are using the correct redirection operators for stdout and stderr.
+
+    Do not use rm.
+
+Submit your script when you are ready for evaluation.
