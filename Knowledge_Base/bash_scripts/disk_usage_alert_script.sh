@@ -25,12 +25,10 @@ THRESHOLD = $1
 #Get threshold 
 
 
-USAGE=$(df / | tail -1 | awk '{print $5}' | tr -d '%')
+$USAGE=(df -P/ | tail -1 | awk '{print $5}' | tr -d '%' ) 
 
-if [ "$USAGE" -ge "$1" ]; then
-   echo "ALERT: Disk is at ${USAGE}%" >&2
-   exit 1
-else
-    echo "Normal: Disk is at ${USAGE}%"
-    exit 0
- fi
+if [ '$USAGE' -ge "$1" ]; then
+    echo "ALERT: Disk is at ${USAGE}%" >&2
+exit 1
+echo "Normal: Disk is at ${USAGE}%"
+exit 0
