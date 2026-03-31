@@ -6,6 +6,12 @@
 
 #    Why: Prevents the "Website is Not Secure" error that kills business value.
 
+# 1. Capture the URL from user input
+# 2. Use openssl s_client to connect to port 443
+# 3. Pipe that output to 'openssl x509' to extract the 'enddate'
+# 4. Use the 'date' command to normalize that string into seconds
+# 5. Perform the math using 'bc' (Binary Calculator)
+# 6. Output the result and append a timestamped entry
 
 #!/bin/bash
 
