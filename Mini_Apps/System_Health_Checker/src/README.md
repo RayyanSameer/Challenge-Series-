@@ -1,85 +1,74 @@
+Dockerized Real-Time System Health Monitor
+ Project Overview
 
+A containerized, full-stack monitoring application that tracks system resource usage (CPU, Memory, and Disk) in real-time. The application utilizes a Python/Flask backend to interface with the host operating system, a Redis in-memory datastore to maintain a rolling history of metrics, and a vanilla JavaScript frontend for data visualization.
 
+The entire stack is orchestrated using Docker Compose, ensuring seamless communication across isolated container networks.
+ Tech Stack
 
-# 3-Tier System Monitor (Python + Redis + Nginx)
+    Backend: Python, Flask, psutil (System Metric Hook)
 
-This project is a lightweight, full-stack monitoring solution designed to track system metrics (CPU, Memory, Disk) and visualize them in a web browser. It follows a decoupled 3-tier architecture and uses **Terraform** for automated infrastructure provisioning.
+    Database: Redis (In-Memory Data Structure Store)
 
----
+    Frontend: HTML5, CSS3, Vanilla JavaScript (Fetch API)
 
-##  Architecture Overview
+    DevOps/Infrastructure: Docker, Docker Compose
 
-The application is split into three distinct layers:
+ Key Features
 
-1.  **Tier 1 — Frontend (Nginx):** A static HTML/JavaScript dashboard. Nginx serves the frontend and acts as a reverse proxy to the backend API.
-2.  **Tier 2 — Backend (Flask API):** A Python REST API that collects real-time system metrics using the `psutil` library.
-3.  **Tier 3 — Data (Redis):** An in-memory data store that caches the last 10 readings to provide historical context.
-4.  **Infrastructure (Terraform):** Automated deployment scripts to provision the necessary cloud environment (VPC, Security Groups, Instances).
+    Real-Time Live Polling: The frontend automatically polls the backend API every 5 seconds to update the active health dashboard.
 
----
+    On-Demand History: Stores a rolling log of the last 10 metric snapshots in Redis (lpush / ltrim). To optimize performance, the history table only fetches and renders when the user explicitly clicks the "Refresh Now" button.
 
-##  Project Structure
+    Proportional UI: Built a responsive, flat-design dashboard utilizing CSS table-layout for clean data presentation.
 
-```text
-.
-├── backend/
-│   ├── app.py                 # Flask API logic
-│   └── requirements.txt       # Python dependencies
-├── frontend/
-│   ├── index.html             # Dashboard UI
-│   └── style.css              # UI Styling
-├── infrastructure/            # Terraform IaC
-│   ├── main.tf                # Provider & Resource definitions
-│   ├── variables.tf           # Input variables
-│   ├── outputs.tf             # DNS/IP Outputs
-│   └── terraform.tfvars       # Sensitive/Local values
-├── nginx/
-│   └── default.conf           # Reverse proxy configuration
-└── docker-compose.yml         # Local Orchestration (Optional)
-```
+    Containerized Networking: Services communicate securely over Docker's internal DNS, with only the Flask API exposed to the host machine.
 
----
+ Quick Start / Deployment
+Prerequisites
 
-##  Getting Started
+    Docker and Docker Compose installed on your machine.
 
-### 1. Provision Infrastructure
-Navigate to the infrastructure folder to spin up your cloud environment via Terraform:
-```bash
-cd infrastructure/
-terraform init
-terraform plan
-terraform apply
-```
+Run the Application
 
-### 2. Application Deployment
-Once the infrastructure is ready (e.g., an EC2 instance or ECS cluster), deploy the containers:
-```bash
-# If using Docker Compose on the provisioned host
-docker-compose up -d --build
-```
-The dashboard will be available at the public IP/DNS provided by the `terraform output`.
+    Clone the repository and navigate to the src directory containing the docker-compose.yml.
 
----
+    Build and start the containers:
+    Bash
 
-##  Tech Stack
+    docker-compose up --build
 
-* **IaC:** Terraform (AWS/Cloud Provider)
-* **Backend:** Python 3.12, Flask, `psutil`
-* **Data:** Redis (Caching layer)
-* **Proxy/Web:** Nginx
-* **Containerization:** Docker
+    Open your browser and navigate to: http://localhost:5000
 
----
+Teardown & Hard Reset
 
-##  API Endpoints
+To stop the application and wipe cached image layers (useful for applying frontend changes):
+Bash
 
-| Endpoint | Method | Description |
-| :--- | :--- | :--- |
-| `/api/metrics` | `GET` | Returns current CPU, RAM, and Disk usage. |
-| `/api/history` | `GET` | Returns the last 10 cached readings from Redis. |
+docker-compose down --rmi all
+# To wipe Redis data as well:
+docker-compose down -v
 
----
+ Bug Log & Troubleshooting (War Stories)
 
-##  License
-Distributed under the MIT License. See `LICENSE` for more information.
-```
+Building this project involved solving several cross-layer infrastructure challenges. Here are the core issues encountered and how they were resolved:
+Symptom / Error	Root Cause	The Solution
+psutil pip install failed (exit code 1)	The psutil Python library requires C-headers to compile OS-level hooks inside a slim Linux Docker image.	Added gcc and python3-dev to the Dockerfile build steps before running pip install.
+Frontend unreachable (localhost:5000 refused)	Flask defaults to binding to 127.0.0.1, making it inaccessible from outside the Docker container.	Configured Flask to listen on 0.0.0.0, mapping it to the container's external-facing network interface.
+Redis ConnectionError	The Flask app was trying to connect to localhost:6379, which pointed to the Flask container itself, not the Redis container.	Updated the Redis connection string in app.py to use Docker's internal DNS (e.g., host='redis').
+updateHistory is not defined (Console Error)	Docker's build cache was serving a stale version of logic.js, preventing new JS functions from being parsed by the browser.	Executed docker-compose down --rmi all to nuke the cache and force a fresh file copy, followed by a Hard Browser Refresh (Ctrl+F5).
+NetworkError / OpaqueResponseBlocking	"Zombie" Docker containers were silently squatting on port 5000, causing the browser to abort the connection.	Killed the hanging processes with a forced Docker teardown and pruned the internal network before rebuilding.
+ Directory Structure
+Plaintext
+
+📦 System_Health_Checker
+ ┣ 📂 src
+ ┃ ┣ 📂 backend
+ ┃ ┃ ┗ 📜 app.py           # Flask API and Redis logic
+ ┃ ┣ 📂 frontend
+ ┃ ┃ ┣ 📜 index.html       # Dashboard UI
+ ┃ ┃ ┣ 📜 style.css        # UI Styling
+ ┃ ┃ ┗ 📜 logic.js         # Fetch API and DOM manipulation
+ ┃ ┣ 📜 Dockerfile         # Multi-stage build instructions
+ ┃ ┣ 📜 docker-compose.yml # Container orchestration and ports
+ ┃ ┗ 📜 requirements.txt   # Python dependencies

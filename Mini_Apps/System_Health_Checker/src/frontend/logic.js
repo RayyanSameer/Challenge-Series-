@@ -1,32 +1,47 @@
 async function updateMetrics() {
-    const cpuEl = document.getElementById('cpu');
-    const memEl = document.getElementById('mem');
-    const diskEl = document.getElementById('disk');
-    const timeEl = document.getElementById('time');
-
     try {
         const response = await fetch('/metrics');
         const data = await response.json();
-        
-        
-        cpuEl.innerText = data.cpu;
-        memEl.innerText = data.memory;
-        diskEl.innerText = data.disk;
-        
-       
-        const now = new Date(data.timestamp);
-        timeEl.innerText = now.toLocaleTimeString();
-        
+        document.getElementById('cpu').innerText = data.cpu;
+        document.getElementById('mem').innerText = data.memory;
+        document.getElementById('disk').innerText = data.disk;
+        document.getElementById('time').innerText = new Date(data.timestamp).toLocaleTimeString();
     } catch (error) {
-        console.error("Failed to fetch metrics:", error);
-        timeEl.innerText = "Error";
+        console.error("Metrics Error:", error);
     }
 }
 
-document.getElementById('refreshBtn').addEventListener('click', updateMetrics);
+async function updateHistory() {
+    try {
+        const response = await fetch('/history');
+        const historyData = await response.json();
+        
+        const body = document.getElementById('historyBody');
+        if (!body) return; 
 
+        body.innerHTML = historyData.map(row => `
+            <tr>
+                <td>${new Date(row.timestamp).toLocaleTimeString()}</td>
+                <td>${row.cpu}%</td>
+                <td>${row.memory}%</td>
+                <td>${row.disk}%</td>
+            </tr>
+        `).join('');
+    } catch (error) {
+        console.error("History Fetch Error:", error);
+    }
+}
 
-setInterval(updateMetrics, 5000);
-
+document.getElementById('refreshBtn').addEventListener('click', () => {
+    updateMetrics();
+    updateHistory();
+});
 
 updateMetrics();
+updateHistory();
+
+
+setInterval(() => {
+    updateMetrics(); 
+
+}, 5000);

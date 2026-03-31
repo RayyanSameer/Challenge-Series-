@@ -32,13 +32,16 @@ def metrics():
 @app.route('/history')
 def history():
     """Returns the last 10 snapshots from Redis."""
-    history_data = [json.loads(x) for x in r.lrange('metrics_history', 0, -1)]
-    return jsonify(history_data)
+    raw_data = r.lrange('metrics_history', 0, -1)
+    history_list = [json.loads(x) for x in raw_data]
+    return jsonify(history_list)
 
 @app.route('/<path:path>')
 def send_report(path):
     
     return send_from_directory('../frontend', path)
 
+
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0', port=5000)
+    
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
