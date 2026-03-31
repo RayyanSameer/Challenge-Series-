@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-card">
+    <h1>System Health</h1>
+
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>CPU</th>
+                <th>Memory</th>
+                <th>Disk</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span id="cpu" class="value">-</span><span class="unit">%</span></td>
+                <td><span id="mem" class="value">-</span><span class="unit">%</span></td>
+                <td><span id="disk" class="value">-</span><span class="unit">%</span></td>
+                <td id="time" class="timestamp">--:--:--</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button id="refreshBtn" class="refresh-btn">Refresh Now</button>
+</div>
+
+<script src="logic.js"></script>
+</body>
+</html>
