@@ -46,7 +46,7 @@ if pgrep -x "$PROCESS" > /dev/null; then
     echo "Service $PROCESS is healthy."
     exit 0
 else
-   echo "CRITICAL: Service [name] is down!" >&2
+   echo "CRITICAL: Service $PROCESS is down!" >&2
    echo "Attempting to restart"
    exit 2
 fi

@@ -14,3 +14,7 @@ RUN pip install --no-cache-dir -r ./requirements.txt
 EXPOSE 5000
 
 CMD ["python", "backend/app.py"]
+
+#Break 1: Wrong port (EXPOSE 9999 but app runs on 5000)
+#Break 2: Missing dependency in requirements.txt
+#Break 3: Wrong CMD syntax
