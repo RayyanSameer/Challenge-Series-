@@ -1,3 +1,4 @@
+#!/bin/bash
 #Question 4: The Process Sentinel (Monitoring)
 
 #Scenario:
@@ -30,7 +31,7 @@
 #   Warning: If you use ps | grep, make sure your script doesn't accidentally find its own grep process in the list (a very common "junior" mistake).
 
 
-#!/bin/bash
+
 error_exit(){
     echo "$1" >&2
     exit "${2:-1}"

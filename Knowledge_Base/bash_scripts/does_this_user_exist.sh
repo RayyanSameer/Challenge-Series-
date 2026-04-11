@@ -1,3 +1,4 @@
+#!/bin/bash
 #This checks if a user exists 
 
 #Goal: Verify if a system user exists.
@@ -13,7 +14,6 @@
 
 
 
-#!/bin/bash
 
 error_exit(){
     echo "$1" >&2

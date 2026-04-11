@@ -1,5 +1,3 @@
-#Checks Ping to Server 
-
 #!/bin/bash
 PATH_TO_CSV=""
 CHOICE=""
@@ -7,10 +5,10 @@ IP=""
 OUTPUT_CSV="ping_results.csv"
 
 echo "Welcome to ping check"
-read -p "Enter [1] for a list of  server or [2] specifc one " CHOICE
+read -p -r "Enter [1] for a list of  server or [2] specifc one " CHOICE
 
 
-if [ "$CHOICE" == "1" ]; then read -p " List path to csv file holding the ip's PATH TO CSV" PATH_TO_CSV
+if [ "$CHOICE" == "1" ]; then read -p -r " List path to csv file holding the ip's PATH TO CSV" PATH_TO_CSV
 
     if [[ -f "$PATH_TO_CSV" ]]; then
     echo "Host,IP,Status" > "$OUTPUT_CSV"
@@ -28,9 +26,10 @@ if [ "$CHOICE" == "1" ]; then read -p " List path to csv file holding the ip's P
         echo "$host,$ip,$status"
         echo "$host,$ip,$status" >> "$OUTPUT_CSV"
     done
+fi    
 
 elif [ "$CHOICE" == "2" ]; then   
-    read -p "Enter IP: " IP
+    read -p -r "Enter IP: " IP
    
     if ping -c 2 -W 2 "$IP" > /dev/null 2>&1; then
                 status="UP $IP is up"

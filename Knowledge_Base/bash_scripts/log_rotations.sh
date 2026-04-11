@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Question 3: The Backup Rotation (Log Compression)
 
 #Scenario:
@@ -23,7 +25,6 @@
 
 #   Handle the case where no .log files exist in the directory without throwing a weird error.
 
-#!/bin/bash
 
 error_exit(){
     echo "$1" >&2

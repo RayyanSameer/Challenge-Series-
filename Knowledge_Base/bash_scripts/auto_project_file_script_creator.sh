@@ -1,3 +1,4 @@
+#!/bin/bash
 #This bash script automates the creation of a generic project folder used in every project
 
 #I am doing this to fix my bash skils 
@@ -13,7 +14,7 @@
 # 5. Then 3 subfiles 
 # 6. In src, sequentially create file1 through 5 
 
-#!/bin/bash
+
 error_exit(){
     echo "$1" >&2
     exit "${2:-1}"
@@ -35,8 +36,8 @@ PARENT_DIR=$(dirname "$TARGET_DIR")
 
 #Create folder 
 
-mkdir -p $TARGET_DIR/{src,doc,bin }
-touch $TARGET_DIR/src {1..5}.txt
+mkdir -p "$TARGET_DIR"/{"src,doc,bin"}
+touch "$TARGET_DIR"/src/{"1..5"}.txt
 
 echo "Done!"
 

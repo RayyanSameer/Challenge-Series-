@@ -1,3 +1,4 @@
+#!/bin/bash
 # Prints out system info 
 
 #OS Version
@@ -8,7 +9,7 @@
 #Network Stats 
 #RAM Stats 
 
-#!/bin/bash
+
 
 DATE=$(date)
 DISK=$(df -h /)
@@ -22,7 +23,7 @@ hostnamectl
 echo "================================"
 
 echo "Date: $DATE"
-echo  "$(whoami)"
+echo  cmd
 
 echo "================================"
 

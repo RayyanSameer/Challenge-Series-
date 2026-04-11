@@ -1,3 +1,4 @@
+#!/bin/bash
 #This script checks if a given disk is being full more than 80 percent and alerts you 
 
 #Goal: Alert when the disk is nearly full.
@@ -11,7 +12,6 @@
 #3. If > 80 copmpare 
 #4. Print red text else Green text 
 
-#!/bin/bash
 error_exit(){
     echo "$1" >&2
     exit "${2:-1}"

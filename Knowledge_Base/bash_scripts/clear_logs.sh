@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #Cleans logs without deleting the file
 
 #Checks if the file /tmp/app.log exists.
@@ -9,7 +11,6 @@
 #If successful, it should print "Logs cleared." to standard output (stdout).
 
 
-#!/bin/bash
 
 error_exit(){
     echo "$1" >&2

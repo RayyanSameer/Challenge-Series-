@@ -1,3 +1,5 @@
+#!/bin/bash   
+
 #Question 5: The Disk Space Alert (Arithmetic & Logic)
 
 #Scenario:
@@ -29,20 +31,19 @@
 
     #Use Bash arithmetic comparison (e.g., -ge or (( ... ))).
 
-#!bin/bash   
 
 error_exit(){
     echo "$1" >&2
     exit "${2:-1}"
 }
 
-theshold="$1"
-if [ -z "$1" ]; then error_exit "Usage..." 1;
+threshold="$1"
+if [ -z "$threshold" ]; then error_exit "Usage: $0 <threshold>" 1;
 fi
 
 USAGE=$(df / | tail -1 | awk '{print $5}' | tr -d '%')
 
-if [ "$USAGE" -ge "$1" ]; then
+if [ "$USAGE" -ge "$threshold" ]; then
    echo "ALERT: Disk is at ${USAGE}%" >&2
    exit 1
 else

@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 #Question 6: The Log Cleaner (Advanced Loops)
 
 #Scenario:
@@ -28,7 +31,6 @@
 #The Pro Tip:
 #To find files older than 7 days, use find "$DIR" -name "*.log" -mtime +7.
 
-#!/bin/bash
 
 #Standard error module 
 
@@ -42,7 +44,7 @@ error_exit(){
 [[ -z "$DIR" ]] && error_exit "Usage $0 <dir>" 1
 DIR="$1"
 [[ ! -d "$DIR" ]] && error_exit "Error not a dir" 1
-[[ ! -w "$DIR "]] && error_exit "Error can't write here " 1
+[[ ! -w "$DIR " ]] && error_exit "Error can't write here " 1
 
 #Count
 

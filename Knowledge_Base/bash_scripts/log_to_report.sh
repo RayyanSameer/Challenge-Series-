@@ -26,7 +26,7 @@ ERRORS=$(grep -c "\[ERROR\]" "$LOG_FILE")
 WARNS=$(grep -c "\[WARNING\]" "$LOG_FILE")
 INFOS=$(grep -c "\[INFO\]" "$LOG_FILE")
 
-if [ $ERRORS -gt 10 ];then
+if [ "$ERRORS" -gt 10 ];then
     echo -e "\e[31mCRITICAL: High error volume detected!\e[0m"
 fi    
 

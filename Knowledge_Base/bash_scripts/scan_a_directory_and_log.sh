@@ -1,8 +1,10 @@
+#!/bin/bash
+
 #WHAT : Scans a directory and logs the output to a file.
 #HOW : Based on user input , while true loop is used to continuously scan the directory and log the output.
 #WHY : To monitor changes in a directory and keep a record of the changes.
 
-#!/bin/bash
+
 
 
 error_exit(){
@@ -10,7 +12,7 @@ error_exit(){
     exit "${2:-1}"
 }
 
-[[$ne 1]]n && error_exit "Usage: $0 <directory_path>"
+[[ $ne 1 ]]  && error_exit "Usage: $0 <directory_path>"
 DIR_PATH="$1"
 LOG_FILE="directory_scan.log"
 

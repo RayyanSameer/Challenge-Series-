@@ -1,6 +1,7 @@
+#!/bin/bash
+
 #a script that takes a source directory and a backup destination. It finds files modified in the last 24 hours and bundles them into a dated .tar.gz archive
 
-#!/bin/bash
 
 error_exit(){
     echo "$1" >&2
@@ -16,7 +17,7 @@ error_exit(){
 SOURCE_DIR="$1"
 BACKUP_DEST="$2"
 DATE=$(date +%Y-%m-%d)
-FINAL_DEST="$BACKUP_DEST/backup_$DATE.tar.gz"
+FINAL_FILE="$BACKUP_DEST/backup_$DATE.tar.gz"
 
 [[ ! -d "$SOURCE_DIR" ]] && error_exit "Source directory $SOURCE_DIR not found." 1
 [[ ! -d "$BACKUP_DEST" ]] && error_exit "Backup destination $BACKUP_DEST not found." 1
@@ -28,6 +29,7 @@ if [[ ! -s "$FILE_LIST" ]]; then
     echo "No files modified in the last 24 hours. Skipping backup."
     rm "$FILE_LIST"
     exit 0
+    fi
 
 echo "Backing up $(wc -l < "$FILE_LIST") files..."
 tar -czf "$FINAL_FILE" -T "$FILE_LIST"
@@ -40,4 +42,4 @@ else
 fi
 
 
-rm "$FILE_LIST"    
+rm "$FILE_LIST"   
