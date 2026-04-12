@@ -1,7 +1,7 @@
 # Bash Syntax — Personal Reference
 
 ## read with prompt
-read -p "message: " VARIABLE     # -p required for prompt
+read -p -r "message: " VARIABLE     # -p required for prompt
 
 ## while loop reading a file
 while IFS=, read -r col1 col2; do
