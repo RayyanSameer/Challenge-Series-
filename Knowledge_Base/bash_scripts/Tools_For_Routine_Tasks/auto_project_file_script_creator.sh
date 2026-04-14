@@ -36,8 +36,8 @@ PARENT_DIR=$(dirname "$TARGET_DIR")
 
 #Create folder 
 
-mkdir -p "$TARGET_DIR"/{"src,doc,bin"}
-touch "$TARGET_DIR"/src/{"1..5"}.txt
+mkdir -p "$TARGET_DIR"/{src,doc,bin}
+touch "$TARGET_DIR"/src/{1..5}.txt
 
 echo "Done!"
 
