@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Azure Study Guide — M3, M4, M5</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f10;
+    --bg2: #181820;
+    --bg3: #1f1f2a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --txt: #e8e6e3;
+    --txt2: #9a9898;
+    --txt3: #6a6868;
+    --accent: #7c6aff;
+    --accent2: #5dcaa5;
+    --accent3: #e8845a;
+    --accent4: #e8c86a;
+    --blue: #5b9cf6;
+    --red: #f06b6b;
+    --m3: #7c6aff;
+    --m4: #5dcaa5;
+    --m5: #e8845a;
+    --exam: #e8c86a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--txt); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.75; }
+  
+  .layout { display: flex; min-height: 100vh; }
+  
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 1.5rem 0;
+  }
+  .sidebar-logo {
+    padding: 0 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+  }
+  .sidebar-logo .title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; color: var(--txt); letter-spacing: -0.02em; }
+  .sidebar-logo .sub { font-size: 11px; color: var(--txt3); font-family: 'IBM Plex Mono', monospace; margin-top: 2px; }
+  
+  .nav-section { margin-bottom: 0.5rem; }
+  .nav-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--txt3);
+    padding: 0.5rem 1.25rem 0.25rem;
+  }
+  .nav-item {
+    display: block;
+    padding: 0.35rem 1.25rem;
+    font-size: 13px;
+    color: var(--txt2);
+    text-decoration: none;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-item:hover { color: var(--txt); background: var(--bg3); }
+  .nav-item.m3 { border-color: var(--m3); color: var(--txt); }
+  .nav-item.m4 { border-color: var(--m4); color: var(--txt); }
+  .nav-item.m5 { border-color: var(--m5); color: var(--txt); }
+  .nav-item.exam-nav { border-color: var(--exam); color: var(--txt); }
+
+  .main { flex: 1; max-width: 880px; padding: 2.5rem 3rem; }
+
+  .module-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .module-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 3px;
+    margin-bottom: 0.75rem;
+  }
+  .tag-m3 { background: rgba(124,106,255,0.15); color: var(--m3); border: 1px solid rgba(124,106,255,0.3); }
+  .tag-m4 { background: rgba(93,202,165,0.12); color: var(--m4); border: 1px solid rgba(93,202,165,0.3); }
+  .tag-m5 { background: rgba(232,132,90,0.12); color: var(--m5); border: 1px solid rgba(232,132,90,0.3); }
+  .tag-exam { background: rgba(232,200,106,0.12); color: var(--exam); border: 1px solid rgba(232,200,106,0.3); }
+
+  .module-header h1 { font-family: 'Fraunces', serif; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.5rem; }
+  .module-header p { color: var(--txt2); font-size: 14px; }
+
+  .section { margin-bottom: 2.5rem; scroll-margin-top: 1.5rem; }
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-title .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-m3 { background: var(--m3); }
+  .dot-m4 { background: var(--m4); }
+  .dot-m5 { background: var(--m5); }
+  .dot-exam { background: var(--exam); }
+
+  .subsection { margin-bottom: 1.5rem; }
+  .subsection h4 {
+    font-size: 13px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--txt2);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .concept-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 0.85rem;
+  }
+  .concept-box h5 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--txt);
+  }
+  .concept-box p, .concept-box li { font-size: 13.5px; color: var(--txt2); line-height: 1.7; }
+  .concept-box ul, .concept-box ol { padding-left: 1.2rem; }
+  .concept-box li { margin-bottom: 0.3rem; }
+
+  .highlight-box {
+    border-left: 3px solid var(--accent);
+    background: rgba(124,106,255,0.06);
+    padding: 0.9rem 1.2rem;
+    border-radius: 0 6px 6px 0;
+    margin: 1rem 0;
+  }
+  .highlight-box.green { border-color: var(--accent2); background: rgba(93,202,165,0.06); }
+  .highlight-box.orange { border-color: var(--accent3); background: rgba(232,132,90,0.06); }
+  .highlight-box.yellow { border-color: var(--accent4); background: rgba(232,200,106,0.06); }
+  .highlight-box p, .highlight-box li { font-size: 13.5px; color: var(--txt2); }
+  .highlight-box strong { color: var(--txt); }
+  .highlight-box ul { padding-left: 1.2rem; margin-top: 0.4rem; }
+  .highlight-box li { margin-bottom: 0.25rem; }
+
+  .table-wrap { overflow-x: auto; margin: 1rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--bg3); color: var(--txt2); font-weight: 500; font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; padding: 0.6rem 0.9rem; text-align: left; border-bottom: 1px solid var(--border2); }
+  td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); color: var(--txt2); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg2); }
+  .code { font-family: 'IBM Plex Mono', monospace; background: var(--bg3); padding: 1px 6px; border-radius: 3px; font-size: 12px; color: var(--accent4); }
+
+  .rule-row { display: grid; gap: 0.5rem; }
+  .rule-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 13px;
+  }
+  .rule-chip .num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); min-width: 36px; font-weight: 600; padding-top: 1px; }
+  .rule-chip .content .label { font-weight: 500; color: var(--txt); }
+  .rule-chip .content .desc { color: var(--txt2); font-size: 12.5px; }
+  .allow { border-left: 3px solid var(--accent2); }
+  .deny { border-left: 3px solid var(--red); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+  }
+  .card h5 { font-size: 13px; font-weight: 500; margin-bottom: 0.4rem; }
+  .card p { font-size: 12.5px; color: var(--txt2); }
+
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 0.4rem;
+    vertical-align: middle;
+  }
+  .b-blue { background: rgba(91,156,246,0.15); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+  .b-green { background: rgba(93,202,165,0.12); color: var(--accent2); border: 1px solid rgba(93,202,165,0.3); }
+  .b-orange { background: rgba(232,132,90,0.12); color: var(--accent3); border: 1px solid rgba(232,132,90,0.3); }
+  .b-red { background: rgba(240,107,107,0.12); color: var(--red); border: 1px solid rgba(240,107,107,0.3); }
+  .b-purple { background: rgba(124,106,255,0.12); color: var(--m3); border: 1px solid rgba(124,106,255,0.3); }
+
+  .exam-card {
+    background: rgba(232,200,106,0.05);
+    border: 1px solid rgba(232,200,106,0.25);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .exam-card .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--exam);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .exam-card .q-text {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--txt);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+  .exam-card .marks { font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: var(--accent4); margin-bottom: 1rem; }
+  .exam-card .answer { font-size: 13.5px; color: var(--txt2); line-height: 1.8; }
+  .exam-card .answer strong { color: var(--txt); }
+  .exam-card .answer ol, .exam-card .answer ul { padding-left: 1.3rem; margin: 0.6rem 0; }
+  .exam-card .answer li { margin-bottom: 0.5rem; }
+  .exam-card .answer p { margin-bottom: 0.6rem; }
+
+  .divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+
+  .tip-box {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+    font-size: 13px;
+    color: var(--txt2);
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+  }
+  .tip-icon { color: var(--accent4); font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 0.75rem 0; }
+  .compare-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+  .compare-card .ch { font-size: 13px; font-weight: 500; margin-bottom: 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+  .compare-card li { font-size: 13px; color: var(--txt2); margin-bottom: 0.35rem; }
+  .compare-card ul { padding-left: 1.1rem; }
+
+  .flow-steps { counter-reset: step; }
+  .flow-step {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .step-content { font-size: 13.5px; color: var(--txt2); }
+  .step-content strong { color: var(--txt); }
+
+  a { color: inherit; text-decoration: none; }
+  
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 1.5rem; }
+    .grid-2, .grid-3, .compare-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="title">Azure Study Guide</div>
+    <div class="sub">M3 · M4 · M5 · 2h / 39 marks</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Module 3 — Networking</div>
+    <a href="#vnet" class="nav-item">Virtual Networks</a>
+    <a href="#subnets" class="nav-item">Subnets & 3-Tier</a>
+    <a href="#dns" class="nav-item">DNS Settings</a>
+    <a href="#nsg" class="nav-item">NSG</a>
+    <a href="#asg" class="nav-item">ASG</a>
+    <a href="#peering" class="nav-item">VNet Peering</a>
+    <a href="#lb" class="nav-item">Load Balancing</a>
+    <a href="#vpn" class="nav-item">VPN Gateway</a>
+    <a href="#firewall" class="nav-item">Azure Firewall</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Module 4 — Identity</div>
+    <a href="#entra" class="nav-item">Entra ID / Tenants</a>
+    <a href="#users" class="nav-item">User Management</a>
+    <a href="#groups" class="nav-item">Groups (Static/Dynamic)</a>
+    <a href="#roles" class="nav-item">AD Roles & RBAC</a>
+    <a href="#pim" class="nav-item">PIM</a>
+    <a href="#connect" class="nav-item">Azure AD Connect</a>
+    <a href="#enterprise" class="nav-item">Enterprise Apps & SSO</a>
+    <a href="#appreg" class="nav-item">App Registration</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Module 5 — Services</div>
+    <a href="#appservice" class="nav-item">Azure App Services</a>
+    <a href="#sql" class="nav-item">SQL Databases</a>
+    <a href="#cost" class="nav-item">Cost Management</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Exam Q&amp;A</div>
+    <a href="#exam" class="nav-item">5-Marker Questions</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- ===================== MODULE 3 ===================== -->
+<div class="module-header">
+  <div class="module-tag tag-m3">MODULE 3</div>
+  <h1>Azure Networking</h1>
+  <p>Virtual Networks, NSG, ASG, Peering, Load Balancing, VPN Gateway, Firewall</p>
+</div>
+
+<!-- VNET -->
+<div id="vnet" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>Virtual Networks (VNet)</div>
+
+  <div class="highlight-box">
+    <strong>Definition:</strong> An Azure Virtual Network (VNet) is a logically isolated, private IP network hosted in Azure. It enables Azure resources (VMs, containers, databases) to securely communicate with each other, the internet, and on-premises infrastructure — without traffic ever traversing the public internet unless explicitly configured to do so.
+  </div>
+
+  <div class="subsection">
+    <h4>Core Components</h4>
+    <div class="rule-row">
+      <div class="rule-chip">
+        <div class="num">01</div>
+        <div class="content"><div class="label">Address Space</div><div class="desc">CIDR range assigned to the VNet (e.g., 10.0.0.0/16). All private IPs for resources inside the VNet are drawn from this pool. A /16 gives 65,536 addresses.</div></div>
+      </div>
+      <div class="rule-chip">
+        <div class="num">02</div>
+        <div class="content"><div class="label">Subnets</div><div class="desc">Sub-divisions of the address space (e.g., 10.0.1.0/24). Each subnet isolates a tier of the architecture. Azure reserves 5 IPs per subnet — the remaining 251 are usable on a /24.</div></div>
+      </div>
+      <div class="rule-chip">
+        <div class="num">03</div>
+        <div class="content"><div class="label">Network Security Groups (NSG)</div><div class="desc">Stateful Layer 3/4 firewall attached to a subnet or NIC. Enforces allow/deny rules on inbound and outbound traffic based on 5-tuple: protocol, port, source, destination, action.</div></div>
+      </div>
+      <div class="rule-chip">
+        <div class="num">04</div>
+        <div class="content"><div class="label">DNS Settings</div><div class="desc">Either Azure-provided (168.63.129.16) or custom DNS servers. Controls name resolution for all VMs inside the VNet — critical for domain-joined VMs and on-premises resolution.</div></div>
+      </div>
+      <div class="rule-chip">
+        <div class="num">05</div>
+        <div class="content"><div class="label">Route Tables</div><div class="desc">Custom User-Defined Routes (UDRs) override Azure's default system routes. Used to force traffic through a firewall NVA or control inter-subnet routing paths.</div></div>
+      </div>
+      <div class="rule-chip">
+        <div class="num">06</div>
+        <div class="content"><div class="label">VNet Peering / Gateway</div><div class="desc">Connect VNets to each other (peering) or to on-premises (VPN/ExpressRoute gateway). Peered traffic stays on Azure backbone — not the public internet.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Lab Example (Production)</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>VNet Name</th><th>Resource Group</th><th>Address Space</th><th>Region</th></tr>
+        <tr><td>VNet-Production</td><td>Networking-Lab-RG</td><td><span class="code">10.0.0.0/16</span></td><td>Central India</td></tr>
+        <tr><td>VNet-Development</td><td>Networking-Lab-RG</td><td><span class="code">10.1.0.0/16</span></td><td>Central India</td></tr>
+      </table>
+    </div>
+    <div class="tip-box"><span class="tip-icon">i</span>Both VNets use non-overlapping address spaces. Overlapping CIDRs prevent peering — always plan address ranges upfront.</div>
+  </div>
+</div>
+
+<!-- SUBNETS -->
+<div id="subnets" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>Subnets &amp; 3-Tier Architecture</div>
+
+  <div class="concept-box">
+    <h5>What is a Subnet?</h5>
+    <p>A subnet is a range of IP addresses carved from the VNet's address space. Each subnet can be independently secured with an NSG, given its own route table, and assigned to a specific service endpoint. Azure reserves 5 IP addresses per subnet (.0 network, .1 default gateway, .2–.3 DNS, .255 broadcast) — so a /24 yields 251 usable IPs.</p>
+  </div>
+
+  <div class="subsection">
+    <h4>Production Subnet Layout</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Subnet</th><th>CIDR</th><th>Available IPs</th><th>Role</th></tr>
+        <tr><td><strong>WebTier-Subnet</strong></td><td><span class="code">10.0.1.0/24</span></td><td>251</td><td>Internet-facing web servers (IIS, Nginx)</td></tr>
+        <tr><td><strong>AppTier-Subnet</strong></td><td><span class="code">10.0.2.0/24</span></td><td>251</td><td>Application/business logic servers</td></tr>
+        <tr><td><strong>DataTier-Subnet</strong></td><td><span class="code">10.0.3.0/24</span></td><td>251</td><td>Database servers (SQL Server, MySQL)</td></tr>
+        <tr><td><strong>Management-Subnet</strong></td><td><span class="code">10.0.10.0/24</span></td><td>251</td><td>Admin jump box / bastion host</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Tier-by-Tier Role Analysis</h4>
+    <div class="concept-box">
+      <h5>WebTier-Subnet — Presentation Layer</h5>
+      <ul>
+        <li>Hosts: IIS, Apache, Nginx web servers (WebServer-VM01, VM02, VM03)</li>
+        <li>Accepts: HTTP (80) and HTTPS (443) from the internet</li>
+        <li>Accepts: RDP (3389) only from Management-Subnet (10.0.10.0/24)</li>
+        <li>Cannot: directly connect to DataTier — all requests must pass through AppTier</li>
+        <li>Has a public IP or sits behind a Public Load Balancer</li>
+        <li>Security posture: least restricted tier for internet traffic, but RDP locked down</li>
+      </ul>
+    </div>
+    <div class="concept-box">
+      <h5>AppTier-Subnet — Business Logic Layer</h5>
+      <ul>
+        <li>Hosts: Application servers running APIs or business logic (AppServer-VM01)</li>
+        <li>Accepts traffic: only from WebTier-Subnet on port 8080 (TCP)</li>
+        <li>Cannot be accessed from the internet directly — no public IP assigned</li>
+        <li>Communicates to: DataTier on SQL port 1433</li>
+        <li>Protected by: AppTier-NSG which denies all except WebTier source</li>
+        <li>Uses: Internal Load Balancer (AppTier-ILB) at private IP 10.0.2.100</li>
+      </ul>
+    </div>
+    <div class="concept-box">
+      <h5>DataTier-Subnet — Data Persistence Layer</h5>
+      <ul>
+        <li>Hosts: DBServer-VM01 (SQL Server / MySQL)</li>
+        <li>Accepts: only port 1433 (SQL) from AppTier-Subnet</li>
+        <li>Most restricted tier — no internet exposure whatsoever</li>
+        <li>No public IP. Private IP only: 10.0.3.x</li>
+        <li>Direct access from WebTier or internet: blocked by NSG (Deny rule)</li>
+        <li>Data here is the crown jewel — all other layers serve to protect it</li>
+      </ul>
+    </div>
+    <div class="concept-box">
+      <h5>Management-Subnet — Jump Box / Admin Plane</h5>
+      <ul>
+        <li>Hosts: JumpBox-VM01 — the single authorised entry point for admins</li>
+        <li>Admins RDP into JumpBox first (from allowed IPs only), then RDP from JumpBox to any VM</li>
+        <li>Prevents: direct internet RDP to production VMs (common attack vector)</li>
+        <li>Acts as: an audit chokepoint for all administrative activity</li>
+        <li>CIDR: 10.0.10.0/24 — deliberately non-sequential to avoid accidental routing overlap</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Development VNet Subnets</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Subnet</th><th>CIDR</th><th>Purpose</th></tr>
+        <tr><td>Dev-Subnet</td><td><span class="code">10.1.1.0/24</span></td><td>Dev environment servers</td></tr>
+        <tr><td>Test-Subnet</td><td><span class="code">10.1.2.0/24</span></td><td>Testing environment</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- DNS -->
+<div id="dns" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>DNS Settings</div>
+
+  <div class="grid-2">
+    <div class="concept-box">
+      <h5>Azure-Provided DNS (Default)</h5>
+      <p>Virtual IP: <span class="code">168.63.129.16</span></p>
+      <p style="margin-top:0.5rem">Zero-configuration. Every VNet gets this automatically. Resolves Azure internal hostnames (VM names within the VNet) and public DNS. Cannot resolve on-premises hostnames.</p>
+    </div>
+    <div class="concept-box">
+      <h5>Custom DNS Servers</h5>
+      <p>Lab example:</p>
+      <ul>
+        <li>Primary: <span class="code">10.0.10.10</span></li>
+        <li>Secondary: <span class="code">10.0.10.11</span></li>
+      </ul>
+      <p style="margin-top:0.5rem">Your own DNS servers (AD DNS controllers). VMs restart NIC after changing — always reboot after update.</p>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>When to Use Custom DNS</h4>
+    <div class="rule-row">
+      <div class="rule-chip"><div class="num">1</div><div class="content"><div class="label">Active Directory Integration</div><div class="desc">Domain-joined VMs must resolve DC hostnames. Azure DNS can't do this — you must point to your own Domain Controllers as DNS servers.</div></div></div>
+      <div class="rule-chip"><div class="num">2</div><div class="content"><div class="label">Hybrid Connectivity (VPN/ExpressRoute)</div><div class="desc">On-premises server names (e.g., fileserver.corp.local) need to resolve inside Azure. Custom DNS server forwards requests to on-premises DNS.</div></div></div>
+      <div class="rule-chip"><div class="num">3</div><div class="content"><div class="label">Conditional Forwarding</div><div class="desc">Route *.internal.corp queries to corporate DNS, everything else to internet. Requires custom DNS server with forwarding rules.</div></div></div>
+      <div class="rule-chip"><div class="num">4</div><div class="content"><div class="label">Security / DNS Filtering</div><div class="desc">DNS appliances like Cisco Umbrella block malicious domains at the DNS level. Must configure VMs to use the security DNS server as their resolver.</div></div></div>
+      <div class="rule-chip"><div class="num">5</div><div class="content"><div class="label">Cross-VNet / Multi-Cloud Resolution</div><div class="desc">Complex environments where names span multiple VNets or cloud providers require a custom DNS hub that knows all name spaces.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- NSG -->
+<div id="nsg" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>Network Security Groups (NSG)</div>
+
+  <div class="highlight-box">
+    <strong>Definition:</strong> An NSG is a stateful Layer 3/4 packet filter containing a list of security rules. It can be associated with a subnet (protects all VMs in that subnet) or a NIC (protects a single VM). Azure evaluates rules by priority — lowest number wins. If no rule matches, the default deny-all applies.
+  </div>
+
+  <div class="subsection">
+    <h4>The 7 Fields of an Inbound Security Rule</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Field</th><th>Values</th><th>Purpose</th></tr>
+        <tr><td><strong>Priority</strong></td><td>100 – 4096</td><td>Order of evaluation. Lower = higher priority. First matching rule wins.</td></tr>
+        <tr><td><strong>Name</strong></td><td>String (unique)</td><td>Human-readable identifier (e.g., Allow-HTTP, Deny-All-Inbound)</td></tr>
+        <tr><td><strong>Port</strong></td><td>80, 443, 3389, *, ranges</td><td>Destination port the rule targets. * = all ports.</td></tr>
+        <tr><td><strong>Protocol</strong></td><td>TCP, UDP, ICMP, *</td><td>Network protocol. * matches all.</td></tr>
+        <tr><td><strong>Source</strong></td><td>IP, CIDR, Service Tag, ASG</td><td>Where traffic originates. e.g., Internet, 10.0.10.0/24, ASG-WebServers</td></tr>
+        <tr><td><strong>Destination</strong></td><td>IP, CIDR, Service Tag, ASG</td><td>Where traffic is going. Usually VirtualNetwork for inbound.</td></tr>
+        <tr><td><strong>Action</strong></td><td>Allow / Deny</td><td>What to do when the rule matches the packet.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>WebTier-NSG Rules (Inbound)</h4>
+    <div class="rule-row">
+      <div class="rule-chip allow"><div class="num">100</div><div class="content"><div class="label">Allow-HTTP <span class="badge b-green">ALLOW</span></div><div class="desc">Port 80 · TCP · Source: Internet → Destination: VirtualNetwork. Allows public web traffic to web servers.</div></div></div>
+      <div class="rule-chip allow"><div class="num">110</div><div class="content"><div class="label">Allow-HTTPS <span class="badge b-green">ALLOW</span></div><div class="desc">Port 443 · TCP · Source: Internet → Destination: VirtualNetwork. Encrypted web traffic — always pair with HTTP rule.</div></div></div>
+      <div class="rule-chip allow"><div class="num">120</div><div class="content"><div class="label">Allow-RDP-From-Mgmt <span class="badge b-green">ALLOW</span></div><div class="desc">Port 3389 · TCP · Source: 10.0.10.0/24 → Destination: VirtualNetwork. Only JumpBox subnet can RDP to web servers.</div></div></div>
+      <div class="rule-chip deny"><div class="num">4096</div><div class="content"><div class="label">Deny-All-Inbound <span class="badge b-red">DENY</span></div><div class="desc">Port * · * · Source: * → Destination: *. Ultimate catch-all. Any traffic not matched above is silently dropped.</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>AppTier-NSG Rules (Inbound)</h4>
+    <div class="rule-row">
+      <div class="rule-chip allow"><div class="num">100</div><div class="content"><div class="label">Allow-From-WebTier <span class="badge b-green">ALLOW</span></div><div class="desc">Port 8080 · TCP · Source: 10.0.1.0/24 (or ASG-WebServers) → AppTier. Only web servers talk to app servers.</div></div></div>
+      <div class="rule-chip allow"><div class="num">110</div><div class="content"><div class="label">Allow-RDP-From-Mgmt <span class="badge b-green">ALLOW</span></div><div class="desc">Port 3389 · TCP · Source: Management-Subnet. Admin access via JumpBox only.</div></div></div>
+      <div class="rule-chip deny"><div class="num">4096</div><div class="content"><div class="label">Deny-All-Inbound <span class="badge b-red">DENY</span></div><div class="desc">Port * · * · * → *. No internet traffic reaches AppTier.</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>The Deny-All-Inbound at Priority 4096 — Why It Matters</h4>
+    <div class="highlight-box yellow">
+      <strong>Purpose:</strong> Zero-trust default enforcement.
+      <ul>
+        <li><strong>Last resort catch-all:</strong> 4096 is the highest allowed custom priority (lowest precedence). Every packet that doesn't match any Allow rule reaches this and gets dropped — unconditionally.</li>
+        <li><strong>Defence in depth:</strong> Explicit deny surfaces intent in the security rule set. Without it, Azure default rules might still pass VNet-originated traffic you didn't account for.</li>
+        <li><strong>Compliance posture:</strong> ISO 27001, SOC 2, and PCI-DSS require a default-deny stance. This rule documents it in audit trails.</li>
+        <li><strong>Mistakes protection:</strong> A misconfigured Allow rule at priority 200 for the wrong port is bad — but at least this catches anything that slips through all your other rules. It's the safety net below all your allows.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>NSG Association Rules</h4>
+    <div class="tip-box"><span class="tip-icon">i</span><span>NSGs can be attached to <strong>subnets</strong> (applies to all VMs in the subnet) and/or <strong>NICs</strong> (applies to one specific VM). When both subnet-level and NIC-level NSGs exist, both are evaluated — subnet NSG first for inbound, NIC NSG first for outbound.</span></div>
+  </div>
+</div>
+
+<!-- ASG -->
+<div id="asg" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>Application Security Groups (ASG)</div>
+
+  <div class="concept-box">
+    <h5>What is an ASG?</h5>
+    <p>An ASG is a logical grouping of VMs based on their application role — not their IP address. Instead of writing NSG rules like "allow traffic from 10.0.1.4 and 10.0.1.5 and 10.0.1.12...", you write "allow traffic from ASG-WebServers". When a new web server VM is added and assigned to ASG-WebServers, it automatically inherits all the rules — no IP address updates needed.</p>
+  </div>
+
+  <div class="subsection">
+    <h4>ASGs in the Lab</h4>
+    <div class="grid-2">
+      <div class="card"><h5>ASG-WebServers</h5><p>Contains: WebServer-VM01, VM02, VM03. Used as source in AppTier-NSG rules. Any new web VM added here auto-gets AppTier access.</p></div>
+      <div class="card"><h5>ASG-AppServers</h5><p>Contains: AppServer-VM01. Used as destination in AppTier-NSG. Destination changes to ASG-AppServers instead of an IP range.</p></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Benefits of ASGs Over IP-Based Rules</h4>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <div class="ch" style="color: var(--red)">IP-Based Rules (Old Way)</div>
+        <ul>
+          <li>Must specify exact IPs or CIDR ranges</li>
+          <li>Adding a new VM = update every NSG rule</li>
+          <li>IPs change if VM is deallocated/reallocated</li>
+          <li>Rules become unmaintainable at scale</li>
+          <li>No semantic meaning — rule says "10.0.1.4" not "web server"</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <div class="ch" style="color: var(--accent2)">ASG-Based Rules (Better)</div>
+        <ul>
+          <li>Group by role: ASG-WebServers, ASG-AppServers</li>
+          <li>Adding VM = assign to ASG. Rules auto-apply.</li>
+          <li>IP-independent — membership is by assignment, not address</li>
+          <li>Scales cleanly — rule count stays constant</li>
+          <li>Self-documenting — rules read like intent</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>NSG Rule Using ASGs (Modified Allow-From-WebTier)</h4>
+    <div class="rule-chip allow"><div class="num">100</div><div class="content"><div class="label">Allow-From-WebTier (ASG version)</div><div class="desc">Source: ASG-WebServers · Destination: ASG-AppServers · Port: 8080 · TCP · Allow. Semantically: "Any server in WebServers group can reach any server in AppServers group on 8080." Adding VM03 to ASG-WebServers = instant access. No rule edit needed.</div></div></div>
+  </div>
+</div>
+
+<!-- VNET PEERING -->
+<div id="peering" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>VNet Peering</div>
+
+  <div class="concept-box">
+    <h5>What is VNet Peering?</h5>
+    <p>VNet Peering connects two Azure VNets so resources in each can communicate as if they're on the same network, using Azure's backbone — never the public internet. Traffic is private, low-latency (&lt;1ms within same region), and high-bandwidth. Peering is non-transitive: A↔B and B↔C does NOT give A↔C connectivity.</p>
+  </div>
+
+  <div class="subsection">
+    <h4>Lab Peering Configuration</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Peering Name</th><th>Direction</th><th>Status</th><th>Forwarded Traffic</th><th>Gateway Transit</th></tr>
+        <tr><td>Prod-to-Dev</td><td>VNet-Production → VNet-Development</td><td><span class="badge b-green">Connected</span></td><td>Yes</td><td>No</td></tr>
+        <tr><td>Dev-to-Prod</td><td>VNet-Development → VNet-Production</td><td><span class="badge b-green">Connected</span></td><td>Yes</td><td>No (Use remote: No)</td></tr>
+      </table>
+    </div>
+    <div class="tip-box"><span class="tip-icon">i</span>VNet Peering is always bidirectional but requires explicit configuration on both sides. "Fully Synchronized" means both peers are configured and healthy.</div>
+  </div>
+
+  <div class="subsection">
+    <h4>Peering Settings Explained</h4>
+    <div class="rule-row">
+      <div class="rule-chip"><div class="num">S1</div><div class="content"><div class="label">Allow Virtual Network Access</div><div class="desc">YES — Allows resources in the remote VNet to communicate with resources in this VNet. If set to No, peering exists but traffic is blocked.</div></div></div>
+      <div class="rule-chip"><div class="num">S2</div><div class="content"><div class="label">Allow Forwarded Traffic</div><div class="desc">YES — Allows traffic that originated outside the remote VNet (e.g., from a third VNet via NVA) to be forwarded through the peering. Required for hub-spoke topologies.</div></div></div>
+      <div class="rule-chip"><div class="num">S3</div><div class="content"><div class="label">Allow Gateway Transit</div><div class="desc">NO (in this lab) — If YES, the remote VNet can use this VNet's VPN Gateway. Used when a hub VNet has a gateway and spokes need on-premises access via it.</div></div></div>
+      <div class="rule-chip"><div class="num">S4</div><div class="content"><div class="label">Use Remote Gateways</div><div class="desc">NO — The spoke VNet uses the hub's gateway. Only one side can have this ON. Requires gateway transit on hub side.</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Exam-Critical Facts on VNet Peering</h4>
+    <div class="highlight-box green">
+      <ul>
+        <li><strong>Latency:</strong> Extremely low (&lt;1ms same region). The lab test showed RTT = 0ms.</li>
+        <li><strong>Cross-region:</strong> Yes — Global VNet Peering supported. Slightly higher latency than same-region.</li>
+        <li><strong>Non-transitive:</strong> DevTest-VM01 can ping WebServer-VM01 (peered), but cannot reach DBServer-VM01 without explicit NSG rules allowing it.</li>
+        <li><strong>No gateway needed:</strong> Peering works without a VPN gateway — it uses Azure's internal backbone.</li>
+        <li><strong>Cost:</strong> Peering is charged per GB of data transferred (inbound and outbound). Same-region is cheaper than cross-region.</li>
+        <li><strong>No overlapping CIDRs:</strong> VNets with overlapping address spaces cannot be peered.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- LOAD BALANCING -->
+<div id="lb" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>Load Balancing (Full)</div>
+
+  <div class="concept-box">
+    <h5>Azure Load Balancer — Overview</h5>
+    <p>Azure Load Balancer is a Layer 4 (TCP/UDP) load balancer that distributes incoming traffic across healthy backend instances. It uses a 5-tuple hash (source IP, source port, dest IP, dest port, protocol) by default. It does not inspect Layer 7 (HTTP headers, URLs) — that requires Azure Application Gateway. Two types exist: Public (internet-facing) and Internal (private).</p>
+  </div>
+
+  <div class="subsection">
+    <h4>Public Load Balancer — WebTier-LB</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Property</th><th>Value</th></tr>
+        <tr><td>Name</td><td>WebTier-LB (webtier-LB)</td></tr>
+        <tr><td>Type</td><td>Public</td></tr>
+        <tr><td>SKU</td><td>Standard</td></tr>
+        <tr><td>Tier</td><td>Regional</td></tr>
+        <tr><td>Frontend IP</td><td>LB-Frontend-IP (Static Public IP: LB-PublicIP)</td></tr>
+        <tr><td>Backend Pool</td><td>WebServers-BackendPool — WebServer-VM01 (10.0.1.4), VM02 (10.0.1.5)</td></tr>
+        <tr><td>Health Probe</td><td>HTTP-HealthProbe: HTTP, port 80, path /, interval 5s, threshold 2</td></tr>
+        <tr><td>LB Rule</td><td>HTTP-LB-Rule: Frontend port 80 → Backend port 80 · Session: None</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Load Balancer Components — Deep Dive</h4>
+    <div class="rule-row">
+      <div class="rule-chip"><div class="num">C1</div><div class="content"><div class="label">Frontend IP Configuration</div><div class="desc">The public (or private) IP address that clients connect to. Traffic arriving here is redirected to the backend pool. Always use Static IP for LBs — dynamic IPs change on restart.</div></div></div>
+      <div class="rule-chip"><div class="num">C2</div><div class="content"><div class="label">Backend Pool</div><div class="desc">The group of VMs (or NICs) that serve traffic. The LB distributes connections across healthy members. Requires VMs to be in the same VNet and region as the LB.</div></div></div>
+      <div class="rule-chip"><div class="num">C3</div><div class="content"><div class="label">Health Probe</div><div class="desc">Periodically pings backend VMs to check if they're alive. HTTP probe hits a URL every 5 seconds. After 2 consecutive failures, the VM is removed from rotation. Prevents traffic going to dead VMs.</div></div></div>
+      <div class="rule-chip"><div class="num">C4</div><div class="content"><div class="label">Load Balancing Rule</div><div class="desc">Maps frontend port to backend port with a specific protocol. Defines session persistence (None = distribute freely, Client IP = sticky sessions) and idle timeout.</div></div></div>
+      <div class="rule-chip"><div class="num">C5</div><div class="content"><div class="label">Inbound NAT Rule</div><div class="desc">Maps a specific frontend port to a specific backend VM. Example: LB port 50001 → WebServer-VM01 port 3389 (RDP). Allows direct admin access to individual VMs via the single LB public IP.</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Health Probe Configuration</h4>
+    <div class="concept-box">
+      <h5>HTTP-HealthProbe</h5>
+      <ul>
+        <li><strong>Protocol:</strong> HTTP — actively requests the path and expects HTTP 200</li>
+        <li><strong>Port:</strong> 80 — standard web port</li>
+        <li><strong>Path:</strong> / — root URL. Can be a custom health endpoint like /health</li>
+        <li><strong>Interval:</strong> 5 seconds — LB checks each backend every 5s</li>
+        <li><strong>Unhealthy Threshold:</strong> 2 consecutive failures → VM removed from pool</li>
+        <li><strong>Recovery:</strong> When VM starts responding, it re-enters the pool automatically</li>
+      </ul>
+    </div>
+    <div class="tip-box"><span class="tip-icon">i</span>HTTP probes are smarter than TCP probes — they verify the web application is actually running, not just that the port is open. Always prefer HTTP probes for web workloads.</div>
+  </div>
+
+  <div class="subsection">
+    <h4>Internal Load Balancer — AppTier-ILB</h4>
+    <div class="concept-box">
+      <h5>Configuration</h5>
+      <ul>
+        <li><strong>Name:</strong> AppTier-ILB · <strong>Type:</strong> Internal · <strong>SKU:</strong> Standard</li>
+        <li><strong>VNet:</strong> VNet-Production · <strong>Subnet:</strong> AppTier-Subnet</li>
+        <li><strong>Frontend Private IP:</strong> 10.0.2.100 (Static) — this is what WebServers call</li>
+        <li><strong>Backend Pool:</strong> AppServer-VM01 (any additional app servers)</li>
+        <li><strong>Health Probe:</strong> TCP probe on port 8080</li>
+        <li><strong>LB Rule:</strong> Port 8080 → backend port 8080</li>
+      </ul>
+    </div>
+    <div class="highlight-box orange">
+      <strong>Why ILB?</strong> The app tier must never be exposed to the internet. WebServer-VM01 calls 10.0.2.100:8080 — the ILB distributes this to whichever app server is healthy. If you scale out to 3 app servers, only the ILB private IP needs updating in WebTier config. VMs in peered VNets (DevTest-VM01) can also access the ILB via VNet peering since the ILB has a private IP.
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>Basic vs Standard SKU Comparison</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Feature</th><th>Basic</th><th>Standard</th></tr>
+        <tr><td>Security default</td><td>Open by default</td><td><strong>Secure by default</strong></td></tr>
+        <tr><td>Availability Zones</td><td>Not supported</td><td><strong>Supported (Zone-redundant)</strong></td></tr>
+        <tr><td>Backend capacity</td><td>Up to 300 instances</td><td><strong>Up to 1000 instances</strong></td></tr>
+        <tr><td>Health probes</td><td>TCP, HTTP</td><td>TCP, HTTP, <strong>HTTPS</strong></td></tr>
+        <tr><td>SLA</td><td>None (for single VMs)</td><td><strong>99.99%</strong></td></tr>
+        <tr><td>Production use</td><td>Not recommended</td><td><strong>Recommended</strong></td></tr>
+        <tr><td>Cost</td><td>Free</td><td>Charged per rule/hour</td></tr>
+        <tr><td>Outbound rules</td><td>Not supported</td><td>Supported</td></tr>
+      </table>
+    </div>
+    <div class="tip-box"><span class="tip-icon">i</span>Standard SKU is secure by default — NSGs required on all associated NICs/subnets. Basic SKU allows traffic without NSGs. Always choose Standard for any production workload.</div>
+  </div>
+
+  <div class="subsection">
+    <h4>Session Persistence Options</h4>
+    <div class="grid-3">
+      <div class="card"><h5>None (Default)</h5><p>5-tuple hash. Best throughput and distribution. No stickiness — user may hit different backend on each request. Good for stateless apps.</p></div>
+      <div class="card"><h5>Client IP (2-tuple)</h5><p>Same source IP always hits same backend. Useful for apps storing session state locally (shopping carts, file uploads). Breaks if user changes IP.</p></div>
+      <div class="card"><h5>Client IP + Protocol (3-tuple)</h5><p>Source IP + protocol determines backend. Useful for mixed TCP/UDP apps or when protocol matters. More specific than 2-tuple.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- VPN GATEWAY -->
+<div id="vpn" class="section">
+  <div class="section-title"><span class="dot dot-m3"></span>VPN Gateway</div>
+
+  <div class="concept-box">
+    <h5>What is a VPN Gateway?</h5>
+    <p>A VPN Gateway is a specific type of Virtual Network Gateway that sends encrypted traffic between Azure VNets and on-premises locations over the public internet (IPsec/IKE tunnels). It can also connect VNets to each other. Each VNet can have only one VPN Gateway. Deployment takes 30–45 minutes as it provisions redundant VMs internally.</p>
+  </div>
+
+  <div class="subsection">
+    <h4>Prerequisites</h4>
+    <div class="rule-row">
+      <div class="rule-chip"><div class="num">P1</div><div class="content"><div class="label">GatewaySubnet</div><div class="desc">Must be named exactly "GatewaySubnet" — Azure enforces this. CIDR: 10.0.255.0/27 (32 addresses). Should not host any other resources. The /27 ensures enough IPs for gateway redundancy.</div></div></div>
+      <div class="rule-chip"><div class="num">P2</div><div class="content"><div class="label">Public IP for Gateway</div><div class="desc">VPNGateway-PIP — the public IP address that on-premises devices connect to. Must be Static with Standard SKU for reliable VPN connectivity.</div></div></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>VPN Gateway SKU Comparison</h4>
+    <div class="table-wrap">
+      <table>
+        <tr><th>SKU</th><th>Throughput</th><th>S2S Tunnels</th><th>P2S Connections</th><th>BGP</th></tr>
+        <tr><td>Basic</td><td>100 Mbps</td><td>10</td><td>128</td><td>No</td></tr>
+        <tr><td>VpnGw1</td><td>650 Mbps</td><td>30</td><td>250</td><td>Yes</td></tr>
+        <tr><td>VpnGw2</td><td>1 Gbps</td><td>30</td><td>500</td><td>Yes</td></tr>
+        <tr><td>VpnGw3</td><td>1.25 Gbps</td><td>30</td><td>1000</td><td>Yes</td></tr>
+      </table>
+    </div>
+    <div class="tip-box"><span class="tip-icon">i</span>Lab uses Basic SKU (cheapest). Production: use VpnGw1 minimum. Basic doesn't support BGP (dynamic routing) and has limited tunnel count.</div>
+  </div>
+
+  <div class="subsection">
+    <h4>VPN Connectivity Options</h4>
+    <div class="grid-2">
+      <div class="concept-box">
+        <h5>Site-to-Site (S2S)</h5>
+        <p>On-premises VPN device (Cisco, Fortinet, Palo Alto) connects to Azure VPN Gateway over IPsec/IKE. Persistent, always-on connection. Requires a public IP on-premises side and a Local Network Gateway in Azure representing the on-premises network.</p>
+      </div>
+      <div class="concept-box">
+        <h5>Point-to-Site (P2S)</h5>
+        <p>Individual client machine connects to Azure VNet via VPN client software. Address pool: 172.16.0.0/24. Tunnel types: OpenVPN (SSL) or IKEv2. Auth: Azure certificate, Azure AD, or RADIUS. Used for remote workers.</p>
+      </div>
+      <div class="concept-box">
+        <h5>VNet-to-VNet</h5>
+        <p>Two Azure VNets connected via their VPN Gateways. Alternative to VNet Peering — encrypted, traverses public internet, higher latency and cost. Useful for cross-subscription or cross-tenant connectivity where peering is not available.</p>
+      </div>
+      <div class="concept-box">
+        <h5>ExpressRoute</h5>
+        <p>Dedicated private circuit (not internet-based) between on-premises and Azure via a connectivity provider. Much higher bandwidth (up to 100 Gbps), lower latency, SLA-backed. Used for large enterprises with consistent high-throughput needs. Uses ExpressRoute Gateway, not VPN Gateway.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h4>P2S VPN Setup (PowerShell)</h4>
+    <div class="highlight-box">
+      <strong>Certificate Generation (Windows PowerShell):</strong>
+      <ul>
+        <li>Step 1: Generate root certificate usi
+Done
+
+
