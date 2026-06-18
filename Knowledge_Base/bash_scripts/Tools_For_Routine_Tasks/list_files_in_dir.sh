@@ -1,5 +1,8 @@
-#!/bin/bash
-#script that takes a directory as an argument, lists all files in it, counts them, and prints the total.
+'
+
+'
+|!/bin/bash
+\#script that takes a directory as an argument, lists all files in it, counts them, and prints the total.
 
 
 
