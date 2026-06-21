@@ -4,14 +4,6 @@
 
 set -euo pipefail
 
-error_exit(){
-    echo "$1" >&2
-    exit "${2:-1}"
-
-}
-
-[[ $# -ne 1 ]] && error_exit "Usage: $0 <container_name_or_id>"
-CONTAINER=$1
 
 if ! docker inspect "$CONTAINER" > /dev/null 2>&1; then
     error_exit "Container not found: $CONTAINER"

@@ -1,0 +1,233 @@
+Here's the complete reference.
+
+---
+
+## 1. Variable Basics
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `$var` | get value | `$name` → `rayyan` |
+| `${var}` | get value (explicit boundary) | `${name}s` → `rayyans` |
+| `"$var"` | get value, preserve spaces | always use this |
+| `'$var'` | literal, no expansion | prints `$var` |
+
+---
+
+## 2. Variable Default / Error Operators
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `${var:-default}` | use default if unset or empty | `${1:-world}` |
+| `${var:=default}` | set AND use default if unset | `${name:=rayyan}` |
+| `${var:?error}` | print error and exit if unset | `${1:?need an arg}` |
+| `${var:+value}` | use value only if var IS set | `${debug:+--verbose}` |
+
+---
+
+## 3. String Strip (the lawnmowers)
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `${var#pattern}` | strip from front, shortest | `${f#*.}` → `log` from `file.log` |
+| `${var##pattern}` | strip from front, longest | `${f##*/}` → `app.log` from `/var/app.log` |
+| `${var%pattern}` | strip from end, shortest | `${f%.log}` → `file` from `file.log` |
+| `${var%%pattern}` | strip from end, longest | `${f%%.*}` → `file` from `file.tar.gz` |
+
+**Rule:** one symbol = stop early. double symbol = eat as much as possible.
+
+---
+
+## 4. String Replace
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `${var/old/new}` | replace first match | `${f/log/LOG}` |
+| `${var//old/new}` | replace all matches | `${f// /_}` |
+| `${var/#old/new}` | replace only at start | `${f/#./}` |
+| `${var/%old/new}` | replace only at end | `${f/%.log/.txt}` |
+
+---
+
+## 5. String Info
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `${#var}` | length of string | `${#name}` → `6` |
+| `${var:2}` | substring from index 2 | `${name:2}` → `yyan` |
+| `${var:2:3}` | substring from index 2, length 3 | `${name:2:3}` → `yya` |
+| `${var: -3}` | last 3 chars (note the space) | `${name: -3}` → `yan` |
+
+---
+
+## 6. Case Conversion
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `${var^^}` | ALL UPPERCASE | `${name^^}` → `RAYYAN` |
+| `${var,,}` | all lowercase | `${NAME,,}` → `rayyan` |
+| `${var^}` | First char uppercase | `${name^}` → `Rayyan` |
+| `${var,}` | First char lowercase | `${NAME,}` → `rAYYAN` |
+
+---
+
+## 7. Arrays
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `arr=(a b c)` | declare array | |
+| `${arr[0]}` | get index 0 | → `a` |
+| `${arr[-1]}` | get last element | → `c` |
+| `${arr[@]}` | all elements | iterate with this |
+| `${arr[*]}` | all elements as one string | for printing |
+| `${#arr[@]}` | count of elements | → `3` |
+| `${arr[@]:1:2}` | slice from index 1, length 2 | → `b c` |
+| `arr+=(d)` | append element | |
+| `unset arr[1]` | delete index 1 | |
+
+---
+
+## 8. Associative Arrays
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `declare -A map` | declare assoc array | |
+| `map[key]=val` | set key | |
+| `${map[key]}` | get value | |
+| `${!map[@]}` | all keys | iterate keys with this |
+| `${map[@]}` | all values | |
+| `${#map[@]}` | count of keys | |
+| `[[ -v map[key] ]]` | check if key exists | |
+
+---
+
+## 9. Special Variables
+
+| Symbol | Meaning |
+|--------|---------|
+| `$0` | script name |
+| `$1` `$2` ... | arguments 1, 2 ... |
+| `$@` | all arguments as separate words |
+| `$*` | all arguments as one string |
+| `$#` | number of arguments |
+| `$?` | exit code of last command |
+| `$$` | PID of current script |
+| `$!` | PID of last background job |
+| `$_` | last argument of previous command |
+
+---
+
+## 10. Arithmetic
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `$(( ))` | arithmetic expression | `$(( 2 + 2 ))` → `4` |
+| `(( ))` | arithmetic condition | `(( x > 5 ))` |
+| `$(( x++ ))` | post-increment | |
+| `$(( x ** 2 ))` | power | |
+| `$(( x % 3 ))` | modulo | |
+
+---
+
+## 11. Command Substitution
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `$(command)` | run command, use output | `$(date)` |
+| `` `command` `` | same, old style, avoid | `` `date` `` |
+
+Always use `$()` — backticks can't nest and are harder to read.
+
+---
+
+## 12. Redirection
+
+| Symbol | Meaning |
+|--------|---------|
+| `>` | write stdout to file (overwrite) |
+| `>>` | append stdout to file |
+| `<` | read stdin from file |
+| `2>` | write stderr to file |
+| `2>&1` | redirect stderr into stdout |
+| `&>` | redirect both stdout and stderr |
+| `\|` | pipe stdout of left into stdin of right |
+| `<<<` | here-string (feed a string as stdin) |
+| `<<EOF` | here-doc (feed multiple lines as stdin) |
+
+---
+
+## 13. Test / Condition Operators
+
+### Inside `[[ ]]`
+
+| Symbol | Meaning |
+|--------|---------|
+| `-f` | is a regular file |
+| `-d` | is a directory |
+| `-e` | exists (file or dir) |
+| `-z` | string is empty |
+| `-n` | string is not empty |
+| `-v` | variable is set |
+| `==` | string equals |
+| `!=` | string not equals |
+| `=~` | regex match |
+| `<` `>` | string comparison (alphabetical) |
+| `-eq` `-ne` `-lt` `-gt` `-le` `-ge` | numeric comparisons |
+
+---
+
+## 14. Logic + Flow
+
+| Symbol | Meaning | Example |
+|--------|---------|---------|
+| `&&` | AND — run next only if previous succeeded | `mkdir d && cd d` |
+| `\|\|` | OR — run next only if previous failed | `cd d \|\| exit 1` |
+| `!` | NOT | `[[ ! -f file ]]` |
+| `;` | run sequentially regardless of exit code | `cmd1; cmd2` |
+| `&` | run in background | `sleep 10 &` |
+
+---
+
+## 15. Bracket Types — the most confused ones
+
+| Symbol | Used for |
+|--------|---------|
+| `[ ]` | old-style test, POSIX, avoid in Bash |
+| `[[ ]]` | Bash test, use this always |
+| `( )` | subshell — runs in a child process |
+| `(( ))` | arithmetic |
+| `{ }` | group commands in current shell |
+| `${ }` | variable expansion |
+| `$( )` | command substitution |
+| `$(( ))` | arithmetic expansion |
+
+---
+
+## 16. Pattern Matching (inside `[[ ]]` and `${ }`)
+
+| Symbol | Meaning |
+|--------|---------|
+| `*` | any string (zero or more chars) |
+| `?` | any single char |
+| `[abc]` | any one of a, b, c |
+| `[^abc]` | any char NOT a, b, or c |
+| `[a-z]` | any char in range |
+| `[:space:]` | POSIX class: whitespace |
+| `[:alpha:]` | POSIX class: letters |
+| `[:digit:]` | POSIX class: numbers |
+| `[:alnum:]` | POSIX class: letters + numbers |
+
+---
+
+## 17. `set` Flags (safety header)
+
+| Flag | Meaning |
+|------|---------|
+| `set -e` | exit on any error |
+| `set -u` | exit on unset variable |
+| `set -o pipefail` | exit if any command in a pipe fails |
+| `set -x` | print every command as it runs (debug) |
+| `set -euo pipefail` | all three combined — use this always |
+
+---
+
+Bookmark this. You'll stop guessing and start reading the scripts like sentences.
