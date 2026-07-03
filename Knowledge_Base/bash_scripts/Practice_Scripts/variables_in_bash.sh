@@ -1,5 +1,3 @@
-#Just a refresher on variables 
-
 #!/bin/bash
 name="Rayyan" #Var
 age=20
