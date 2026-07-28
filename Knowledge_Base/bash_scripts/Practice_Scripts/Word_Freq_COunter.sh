@@ -5,8 +5,8 @@ if [[ $# -ge 2 ]]; then
     input_file="$1"
     words_to_be_excluded_file="$2"
 else
-    read -p "Enter input file path: " input_file
-    read -p "Enter excluded words file path: " words_to_be_excluded_file
+    read -r -p "Enter input file path: " input_file
+    read -r -p "Enter excluded words file path: " words_to_be_excluded_file
 fi
 
 if [[ ! -f "$input_file" ]]; then

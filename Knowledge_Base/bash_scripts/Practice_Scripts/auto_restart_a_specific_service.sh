@@ -26,7 +26,7 @@ restart_service(){
 }
 
 log_action(){
-    echo "$(date): '$PROCESS' Service restarted" >> /var/log/service_watch.log
+    echo "$(date): '$PROCESS' Service restarted" >> $LOGFILE_PATH
 }
 
 PROCESS=""

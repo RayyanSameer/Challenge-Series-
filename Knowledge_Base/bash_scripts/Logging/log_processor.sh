@@ -2,7 +2,7 @@
 set -euo pipefail
 LOGFILE="${1:sample.log}"
 
-if [[ ! -f "sample.log" ]]; then do
+if [[ ! -f "sample.log" ]]; then 
     echo "File not exist" >&2
     exit 1
 fi

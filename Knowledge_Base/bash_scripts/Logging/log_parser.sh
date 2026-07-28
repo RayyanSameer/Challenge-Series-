@@ -1,16 +1,17 @@
-#!bin/usr/env bash
+#!/bin/bash
 set -euo pipefail
 
-LOGFILE="$1:-logfile.txt"
+LOGFILE="${1:-logfile.txt}"
 
-if [[ ! -f "$LOGFILE" ]]; then do
+if [[ ! -f "$LOGFILE" ]]; then 
     echo "theres no logfile" >&2
     exit 1
 fi
 
 while IFS= read -r line; do
-    timestamp=$"{line:0:15}"
-    rest=$"{line:16}"
+    [[ -z "$line" ]] && continue
+    timestamp="${line:0:15}"
+    rest="${line:16}"
 
 read -r name tag severity message <<< "$rest"
 

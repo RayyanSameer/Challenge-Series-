@@ -1,4 +1,3 @@
-cat > ~/pz_memlog.sh << 'EOF'
 #!/bin/bash
 LOGFILE=~/pz_memory_log.txt
 echo "Starting memory logging. Press Ctrl+C to stop." > "$LOGFILE"

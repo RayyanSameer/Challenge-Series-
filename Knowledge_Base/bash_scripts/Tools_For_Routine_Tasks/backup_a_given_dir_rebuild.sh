@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-set -euo pipefall
+set -euo pipefail
 
-SOURCE="${1: /tmp/my test folder}"
+SOURCE="${1:-/tmp/my test folder}"
 DEST="${2: /tmp/backups}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 
-: "$(SOURCE:? ERROR NO SOURCE)"
-: "$(DEST:? DEST NO SOURCE)"
+: "${SOURCE:? ERROR NO SOURCE}"
+: "${DEST:? DEST NO SOURCE}"
 
 readonly BACKUP_NAME="backup_${TIMESTAMP}"
-readonly BACKUP_PATH="{DEST}/${BACKUP_NAME}"
+readonly BACKUP_PATH="{$DEST}/${BACKUP_NAME}"
 
 
-if [[ ! -f "$SOURCE" ]]; then  
+if [[ ! -d "$SOURCE" ]]; then  
     echo "Error: source directory '$SOURCE' not match" >&2
     exit 1
 fi
@@ -24,3 +24,4 @@ cp -r "$SOURCE/." "$BACKUP_PATH/"
 echo "Source  : $SOURCE"
 echo "Dest    : $BACKUP_PATH"
 echo "Done."
+

@@ -9,11 +9,11 @@ normalize(){
     local underscored="${trimmed// /_}"
     underscored="$underscored//[^a-z0-9_.]/_}"
 
-    while [[ "$underscored" == *__*]]; do
+    while [[ "$underscored" == *__* ]]; do
         underscored="${underscored//__/_}"
     done
 
-    local clean="${underdscored%_}"
+    local clean="${underscored}"
     clean="${clean%.}"
 
     local ext="${clean##*.}"

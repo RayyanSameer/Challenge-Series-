@@ -7,7 +7,7 @@
 set -euo pipefall
 
 LOGFILE="${1:?Usage:$0 <nginx_error_log>}"
-read -p -r "Enter path to your logfile: " $LOGFILE_PATH
+read -p -r "Enter path to your logfile: " LOGFILE
 
 #extract
 #grep -oP to pull error codes 

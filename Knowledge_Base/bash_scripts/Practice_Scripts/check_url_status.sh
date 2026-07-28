@@ -23,7 +23,7 @@ check_url_status(){
             echo "[ DOWN ] (HTTP $http_code)"
         fi
     else
-        echo "[ UNREACHABLE ] (Connection failed)"
+        echo "[ UNREACHABLE "
     fi
 }
 
@@ -32,17 +32,17 @@ echo "============================================="
 echo " Press [1] to check a specific URL."
 echo " Press [2] to load a list of URLs from a file."
 echo "============================================="
-read -p "Enter your choice: " choice
+read  -r -p "Enter your choice: " choice
 
 if [[ "$choice" == "1" ]]; then
-    read -p "Enter URL of the site you want to check: " url
+    read -r -p "Enter URL of the site you want to check: " url
     if [[ -z "$url" ]]; then
         error_exit "Input cannot be empty"
     fi
     check_url_status "$url"
 
 elif [[ "$choice" == "2" ]]; then
-    read -p "Enter path to textfile containing the list of URLs: " filepath
+    read -r -p "Enter path to textfile containing the list of URLs: " filepath
     if [[ -z "$filepath" ]]; then
         error_exit "Path cannot be empty"
     elif [ ! -f "$filepath" ]; then

@@ -1,0 +1,53 @@
+
+In ./Tools_For_Routine_Tasks/normalize_filenames.sh line 16:
+    while [["$underscored" == *__* ]]; do
+          ^-- SC1035 (error): You need a space after the [[ and before the ]].
+
+
+In ./Tools_For_Routine_Tasks/keep_my_workspace_clean.sh line 13:
+[[ ! -d "$DEST_DIR" ]] && mkdir -p "$DEST_DIR" || error_exit "Could not create archive dir" 1
+                       ^-- SC2015 (info): Note that A && B || C is not if-then-else. C may run when A is true.
+
+
+In ./Tools_For_Routine_Tasks/normalize_filenames_rebuild.sh line 12:
+    while [[ "$underscored" == *__*]]; do
+    ^-- SC1009 (info): The mentioned syntax error was in this while loop.
+          ^-- SC1073 (error): Couldn't parse this test expression. Fix to allow more checks.
+                                     ^-- SC1020 (error): You need a space before the ]].
+                                     ^-- SC1072 (error): Missing space before ]. Fix any mentioned problems and try again.
+
+
+In ./Tools_For_Routine_Tasks/list_files_in_dir.sh line 1:
+'
+^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a 'shell' directive.
+^-- SC2289 (error): This is interpreted as a command name containing a linefeed. Double check syntax.
+
+
+In ./Tools_For_Routine_Tasks/list_files_in_dir.sh line 4:
+|!/bin/bash
+^-- SC1070 (error): Parsing stopped here. Mismatched keywords or invalid parentheses?
+^-- SC1133 (error): Unexpected start of line. If breaking lines, |/||/&& should be at the end of the previous one.
+
+
+In ./Logging/New_Log_Parser.sh line 17:
+    read -r hostname tag severity message <<< "$rest"
+                     ^-^ SC2034 (warning): tag appears unused. Verify use (or export if used externally).
+
+
+In ./Logging/log_processor.sh line 5:
+if [[ ! -f "sample.log" ]]; then do
+^-- SC1009 (info): The mentioned syntax error was in this if expression.
+                            ^-- SC1073 (error): Couldn't parse this then clause. Fix to allow more checks.
+                                   ^-- SC1072 (error): Unexpected keyword/token. Fix any mentioned problems and try again.
+
+
+In ./Logging/log_parser.sh line 6:
+if [[ ! -f "$LOGFILE" ]]; then do
+^-- SC1009 (info): The mentioned syntax error was in this if expression.
+                          ^-- SC1073 (error): Couldn't parse this then clause. Fix to allow more checks.
+                                 ^-- SC1072 (error): Unexpected keyword/token. Fix any mentioned problems and try again.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC1020 -- You need a space before the ]].
+  https://www.shellcheck.net/wiki/SC1035 -- You need a space after the [[ and...
+  https://www.shellcheck.net/wiki/SC1133 -- Unexpected start of line. If brea...

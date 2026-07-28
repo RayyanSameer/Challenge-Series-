@@ -1,0 +1,82 @@
+
+In ./Duplicate_file_finder.sh line 12:
+    if [[ -f "$file" ]]; then do
+    ^-- SC1009 (info): The mentioned syntax error was in this if expression.
+                         ^-- SC1073 (error): Couldn't parse this then clause. Fix to allow more checks.
+                                ^-- SC1072 (error): Unexpected keyword/token. Fix any mentioned problems and try again.
+
+
+In ./looping.sh line 4:
+for fruit in "${fruits[0]}"; do
+             ^------------^ SC2066 (error): Since you double quoted this, it will not word split, and the loop will only run once.
+
+
+In ./looping.sh line 16:
+    echo "Found: $file - size: $(du -h $file | cut -f1)"
+                                       ^---^ SC2086 (info): Double quote to prevent globbing and word splitting.
+
+Did you mean: 
+    echo "Found: $file - size: $(du -h "$file" | cut -f1)"
+
+
+In ./check_url_status.sh line 35:
+read -p "Enter your choice: " choice
+^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In ./check_url_status.sh line 38:
+    read -p "Enter URL of the site you want to check: " url
+    ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In ./check_url_status.sh line 45:
+    read -p "Enter path to textfile containing the list of URLs: " filepath
+    ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In ./http_error_code_extraction_tool.sh line 10:
+read -p -r "Enter path to your logfile: " $LOGFILE_PATH
+                                          ^-----------^ SC2229 (warning): This does not read 'LOGFILE_PATH'. Remove $/${} for that, or use ${var?} to quiet.
+                                          ^-----------^ SC2086 (info): Double quote to prevent globbing and word splitting.
+
+Did you mean: 
+read -p -r "Enter path to your logfile: " "$LOGFILE_PATH"
+
+
+In ./log_line_counter.sh line 5:
+    exit ${"2:-1"}
+         ^-------^ SC2086 (info): Double quote to prevent globbing and word splitting.
+           ^----^ SC2301 (error): Parameter expansion starts with unexpected quotes. Double check syntax.
+
+Did you mean: 
+    exit "${"2:-1"}"
+
+
+In ./log_line_counter.sh line 8:
+logfile="$1:? Usage: $0 <logfile>"
+^-----^ SC2034 (warning): logfile appears unused. Verify use (or export if used externally).
+
+
+In ./Word_Freq_COunter.sh line 8:
+    read -p "Enter input file path: " input_file
+    ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In ./Word_Freq_COunter.sh line 9:
+    read -p "Enter excluded words file path: " words_to_be_excluded_file
+    ^--^ SC2162 (info): read without -r will mangle backslashes.
+
+
+In ./target_isolated_logger.sh line 1:
+cat > ~/pz_memlog.sh << 'EOF'
+^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a 'shell' directive.
+
+
+In ./auto_restart_a_specific_service.sh line 10:
+LOGFILE_PATH="/var/log/service_watch.log"
+^----------^ SC2034 (warning): LOGFILE_PATH appears unused. Verify use (or export if used externally).
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2066 -- Since you double quoted this, it ...
+  https://www.shellcheck.net/wiki/SC2148 -- Tips depend on target shell and y...
+  https://www.shellcheck.net/wiki/SC2301 -- Parameter expansion starts with u...

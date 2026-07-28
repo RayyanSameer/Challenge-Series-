@@ -1,22 +1,23 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 set -euo pipefail
 
-#WHAT : This is a Practice Script That Deals with using checksum arrays to find dupes 
 
 DIR="${1:?Usage: $0 <directory>}"
 
+# Declare an associative array (hash map)
 declare -A seen
 
-for file in "$DIR"; do
-    if [[ -f "$file" ]]; then do
-        if [[ seen -v["$checksum"] ]]; then
-            echo "$file is a dupe of ${seen[$checksum]}"
+
+for file in "$DIR"/*; do
+    
+    if [[ -f "$file" ]]; then
+        
+        checksum=$(sha256sum "$file" | awk '{print $1}')
+        if [[ -v seen["$checksum"] ]]; then
+            echo "[DUPLICATE] '$file' is a duplicate of '${seen[$checksum]}'"
         else
+            
             seen["$checksum"]="$file"
         fi
     fi
-done            
-
-
-        
+done

@@ -13,7 +13,7 @@ normalize(){
     local underscored="${lower//[[:space:]]/_}"
     underscored="${underscored//[^a-z0-9_.]/_}"
 #Remove Underscored
-    while [["$underscored" == *__* ]]; do
+    while [[ "$underscored" == *__* ]]; do
         underscored="${underscored//__/_}"
     done
 #Remove trailing dot or underscore 
