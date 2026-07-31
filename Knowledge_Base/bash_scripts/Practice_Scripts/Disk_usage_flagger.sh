@@ -17,7 +17,8 @@ if [[ -z $threshold ]]; then
     error_exit "You have'nt entered anything"
 else 
     if [[ ! "$threshold" =~ ^[0-9]+$ ]] || [ "$threshold" -gt 99 ]; then
-    echo "Not a valid threshold , Must be between 0 - 99 "
+    echo "Not a valid threshold , Must be between 0 - 99 ">&2
+    exit 1
     else
         df -hP | awk -v t="$threshold" '
 NR > 1 {
