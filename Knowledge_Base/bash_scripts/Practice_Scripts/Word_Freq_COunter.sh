@@ -20,8 +20,6 @@ if [[ ! -f "$words_to_be_excluded_file" ]]; then
 fi
 
 
-
-
 tr '[:upper:]' '[:lower:]' < "$input_file" |
 tr -d '.,!?;:"' |
 tr ' ' '\n' |

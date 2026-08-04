@@ -3,5 +3,5 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-CMD [ "python" , "./app/fixed_shallow_health_check_app.py" ]
+CMD [ "python" , "fixed_shallow_health_check_app" ]
 EXPOSE 5000
